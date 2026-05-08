@@ -16,5 +16,5 @@ By the way, it's called Ariadne because she has a thread (similar to a string, r
 Download it from this repository and add the header to your project or use `cl -i ariadne` in your console if you have CLearning installed
 
 ### Version
-1.1.0 - Ariadne, String Manager
+1.1.1a - Ariadne, String Manager
 Author: Nahum Naranjo
