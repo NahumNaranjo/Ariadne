@@ -9,6 +9,10 @@
     #include <math.h>
     static jmp_buf buf;
 
+    static inline void handleCrash(int sig){
+        longjmp(buf, 1);
+    }
+
     // chops the whitespaces
     static inline char* trimWhitespace(char* str) {
         char* end;
@@ -31,7 +35,7 @@
 
     // Cleans "\" off in a file path
     static inline void cleanBackSlash(char* source) {
-        if (source == NULL) return;
+        if (source == (char*)NULL) return;
     
         for (size_t i = 0; source[i] != '\0'; i++) {
             if (source[i] == '\\') {
@@ -44,15 +48,15 @@
     static inline char getXChars(char* string, int chars, char mode){
         if(chars <= 0 || !chars){
             perror("Can't get less than 1 character");
-            return NULL;
+            return '\0';
         }
         if(!string){
             perror("No string to read");
-            return NULL;
+            return '\0';
         }
         if((mode != 'l' && mode != 'f') || !mode){
             perror("Unsopported mode");
-            return NULL;
+            return '\0';
         }
         char *returning = (char*)malloc(sizeof(char)*chars);
         if(mode == 'f'){
@@ -97,7 +101,7 @@
     }
 
     // return's a string's randomness
-    float EntropyAnalysis(char* value) {
+    static inline float EntropyAnalysis(char* value) {
         if (!value || !SimpleHeuristic(value)) return 8.0; // High entropy if not string
     
         int counts[256] = {0};
@@ -143,9 +147,6 @@
         
     }
 
-    static inline void handleCrash(int sig){
-        longjmp(buf, 1);
-    }
 
     static inline int vote(void* value){
         signal(SIGSEGV, handleCrash);
@@ -160,6 +161,24 @@
             votingResults += 1;
         }
         return votingResults;
+    }
+
+    // Returns a char* to a all lowercase string
+    static inline char* toLowerCase(char* string){
+        char* returning = malloc(sizeof(char) * 128);
+        for(int i = 0; i < strlen(string); i++){
+            returning[i] = tolower(string[i]);
+        }
+        return returning;
+    }
+
+    // Returns a char* to a all uppercase string
+    static inline char* toUpperCase(char* string){
+        char* returning = malloc(sizeof(char) * 128);
+        for(int i = 0; i < strlen(string); i++){
+            returning[i] = toupper(string[i]);
+        }
+        return returning;
     }
     
 #endif
